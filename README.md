@@ -1,6 +1,8 @@
 # Pmanager
 Password Manager with python
 
+## Written in python 3.7.3 
+
 # Installation on Windows:
 * `git clone https://github.com/ninjahacker123/Pmanager.git`
 * `cd Pmanager`
