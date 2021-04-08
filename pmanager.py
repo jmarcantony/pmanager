@@ -36,7 +36,12 @@ def decrypt_file():
         with open("key.txt", "rb") as f:
             key = f.read()
     except FileNotFoundError:
-        print("[-] 'key.txt' file not found!")
+        try:
+            with open("error-log.txt", "a") as f:
+                f.write("[-] 'key.txt' file not found!")
+        except FileNotFoundError:
+            with open("error-log.txt", "w") as f:
+                f.write("[-] 'key.txt' file not found!")
     else:
         fernet = Fernet(key)
         with open("data.json", "rb") as encoded_file:
@@ -179,6 +184,7 @@ except FileNotFoundError:
         clear()
         print("[+] Data File has been created. Run the programme again to use it.")
         encrypt_file()
+        os.remove("key.txt")
 except KeyboardInterrupt:
     clear()
     print("Goodbye...")
