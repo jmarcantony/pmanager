@@ -64,7 +64,7 @@ def change_master_password(data):
             json.dump(data, f, indent=4)
             print("[+] Master Password has been updated succcesfully!")
     else:
-        print("\n[-] Password do not match!\n")
+        print("\n[-] Password do not match!")
         change_master_password(data)
 
 def exit_programme(args):
