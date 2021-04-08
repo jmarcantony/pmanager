@@ -1,3 +1,4 @@
+import os
 import json
 import time
 import base64
@@ -6,7 +7,7 @@ import pyperclip
 from getpass import getpass
 from os import system, name
 from tabulate import tabulate
-
+from cryptography.fernet import Fernet
 
 # Functions
 def clear():
@@ -18,6 +19,31 @@ def clear():
 def encode_sha(string):
     sha_hash = hashlib.sha256(string.encode()).hexdigest()
     return sha_hash
+
+def encrypt_file():
+    key = Fernet.generate_key()
+    fernet = Fernet(key)
+    with open("data.json", "rb") as f:
+        original = f.read()
+    encrypted = fernet.encrypt(original)
+    with open("data.json", "wb") as new_f:
+        new_f.write(encrypted)
+    with open("key.txt", "wb") as key_f:
+        key_f.write(key)
+
+def decrypt_file():
+    try:
+        with open("key.txt", "rb") as f:
+            key = f.read()
+    except FileNotFoundError:
+        print("[-] 'key.txt' file not found!")
+    else:
+        fernet = Fernet(key)
+        with open("data.json", "rb") as encoded_file:
+            encrypted = encoded_file.read()
+        decrypted = fernet.decrypt(encrypted)
+        with open("data.json", "wb") as dec_file:
+            dec_file.write(decrypted)
 
 def change_master_password(data):
     new_pass = input("\nEnter new password: ")
@@ -87,6 +113,7 @@ def add_data(email_to_add, email_password):
                     print("[+] Updated Entry to Database, restart app to get data.")
 
 try:
+    decrypt_file()
     with open("data.json") as file:
         # Read Master Password
         data = json.load(file)
@@ -95,6 +122,7 @@ try:
         if master_password == "dGVzdA==":
             print("Please Change your master password!")
             change_master_password(data)
+            encrypt_file()
             quit()
 
         master_password_input = getpass("Enter master password: ")
@@ -130,6 +158,7 @@ try:
                     # Exit Command                    
                     if exit_programme(command):
                         clear()
+                        encrypt_file()
                         break
                 except IndexError:
                     clear()
@@ -149,8 +178,10 @@ except FileNotFoundError:
             """)
         clear()
         print("[+] Data File has been created. Run the programme again to use it.")
+        encrypt_file()
 except KeyboardInterrupt:
     clear()
     print("Goodbye...")
     time.sleep(0.5)
     clear()
+    encrypt_file()
