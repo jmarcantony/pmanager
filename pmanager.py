@@ -55,8 +55,8 @@ def decrypt_file():
             dec_file.write(decrypted)
 
 def change_master_password(data):
-    new_pass = input("\nEnter new password: ")
-    retype = input("\nRetype new password: ")
+    new_pass = getpass("\nEnter new password: ")
+    retype = getpass("Retype new password: ")
     
     if new_pass == retype:
         data["master_password"] = encode_sha(new_pass)
@@ -129,7 +129,7 @@ try:
         master_password = data['master_password']
 
         if master_password == "dGVzdA==":
-            print("Please Change your master password!")
+            print("\nPlease Change your master password!")
             change_master_password(data)
             encrypt_file()
             quit()
