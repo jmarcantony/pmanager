@@ -39,6 +39,12 @@ Password Manager with python
 ###  Usage:
     show all
 
+## switch:
+###  Description:
+    Changes master password
+###  Usage:
+    switch
+
 ## clear:
 ###  Description:
     Clears the scren.
