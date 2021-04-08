@@ -1,13 +1,17 @@
-import os
-import json
-import time
-import base64
-import hashlib
-import pyperclip
-from getpass import getpass
-from os import system, name
-from tabulate import tabulate
-from cryptography.fernet import Fernet
+try:
+    import os
+    import json
+    import time
+    import base64
+    import hashlib
+    import pyperclip
+    from getpass import getpass
+    from os import system, name
+    from tabulate import tabulate
+    from cryptography.fernet import Fernet
+except ModuleNotFoundError:
+    print("[-] Requirements not satisfied!\n\trun 'pip install -r requirements.txt'\n\t\tOR\n\trun 'pip3 install -r requirements.txt'")
+    quit()
 
 # Functions
 def clear():
