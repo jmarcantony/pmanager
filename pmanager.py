@@ -57,7 +57,7 @@ def decrypt_file():
                 dec_file.write(decrypted)
         except cryptography.fernet.InvalidToken:
             os.remove("key.txt")
-            print("[-] An Error Occured an was handled!")
+            print("[-] An Error Occured and was handled!")
 
 def change_master_password(data):
     new_pass = getpass("\nEnter new password: ")
