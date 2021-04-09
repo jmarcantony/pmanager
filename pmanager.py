@@ -6,6 +6,7 @@ try:
     import hashlib
     import pyperclip
     import cryptography
+    import datetime as dt
     from getpass import getpass
     from os import system, name
     from tabulate import tabulate
@@ -41,12 +42,8 @@ def decrypt_file():
         with open("key.txt", "rb") as f:
             key = f.read()
     except FileNotFoundError:
-        try:
-            with open("error-log.txt", "a") as f:
-                f.write("[-] 'key.txt' file not found!")
-        except FileNotFoundError:
-            with open("error-log.txt", "w") as f:
-                f.write("[-] 'key.txt' file not found!")
+        with open("error-log.txt", "w") as f:
+            f.write(f"({dt.date.today().strftime('%d/%m/%Y')}, {dt.datetime.now().strftime('%H:%M:%S')}) 'key.txt' file not found!")
     else:
         try:
             fernet = Fernet(key)
@@ -57,12 +54,8 @@ def decrypt_file():
                 dec_file.write(decrypted)
         except cryptography.fernet.InvalidToken:
             os.remove("key.txt")
-            try:
-                with open("error-log.txt", "a") as f:
-                    f.write("[-] An Error Occured and was handled!")
-            except FileNotFoundError:
-                with open("error-log.txt", "w") as f:
-                    f.write("[-] An Error Occured and was handled!")
+            with open("error-log.txt", "w") as f:
+                f.write(f"({dt.date.today().strftime('%d/%m/%Y')}, {dt.datetime.now().strftime('%H:%M:%S')}) An Error Occured and was handled!")
 
 def change_master_password(data):
     new_pass = getpass("\nEnter new password: ")
