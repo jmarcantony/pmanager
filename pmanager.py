@@ -5,6 +5,7 @@ try:
     import base64
     import hashlib
     import pyperclip
+    import cryptography
     from getpass import getpass
     from os import system, name
     from tabulate import tabulate
@@ -47,12 +48,16 @@ def decrypt_file():
             with open("error-log.txt", "w") as f:
                 f.write("[-] 'key.txt' file not found!")
     else:
-        fernet = Fernet(key)
-        with open("data.json", "rb") as encoded_file:
-            encrypted = encoded_file.read()
-        decrypted = fernet.decrypt(encrypted)
-        with open("data.json", "wb") as dec_file:
-            dec_file.write(decrypted)
+        try:
+            fernet = Fernet(key)
+            with open("data.json", "rb") as encoded_file:
+                encrypted = encoded_file.read()
+            decrypted = fernet.decrypt(encrypted)
+            with open("data.json", "wb") as dec_file:
+                dec_file.write(decrypted)
+        except cryptography.fernet.InvalidToken:
+            os.remove("key.txt")
+            print("[-] An Error Occured an was handled!")
 
 def change_master_password(data):
     new_pass = getpass("\nEnter new password: ")
