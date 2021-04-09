@@ -57,7 +57,12 @@ def decrypt_file():
                 dec_file.write(decrypted)
         except cryptography.fernet.InvalidToken:
             os.remove("key.txt")
-            print("[-] An Error Occured and was handled!")
+            try:
+                with open("error-log.txt", "a") as f:
+                    f.write("[-] An Error Occured and was handled!")
+            except FileNotFoundError:
+                with open("error-log.txt", "w") as f:
+                    f.write("[-] An Error Occured and was handled!")
 
 def change_master_password(data):
     new_pass = getpass("\nEnter new password: ")
@@ -116,7 +121,7 @@ def add_data(email_to_add, email_password):
                 new_data['entries'][email_to_add] = email_password
                 json.dump(new_data, file, indent=4)
                 clear()
-                print("[+] Added Entry to Database, restart app to get data.")
+                print("[+] Added Entry to Database")
             else:
                 update = input(f"{email_to_add} is already in the databse, do you want to update it? (y / n): ").lower()
                 if update == "y":
@@ -143,6 +148,9 @@ try:
         if encode_sha(master_password_input) == master_password:
             clear()
             while True:
+                decrypt_file()
+                with open("data.json", "r") as f:
+                    data = json.load(f)
                 command = input(">> ").split()
                 try:
                     if command[0] == "getpass":
@@ -180,6 +188,7 @@ try:
         else:
             clear()
             print("[-] Wrong Password, Try again.")
+            encrypt_file()
 except FileNotFoundError:
     with open("data.json", "w") as f:
         f.write("""
