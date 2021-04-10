@@ -130,58 +130,59 @@ try:
         # Read Master Password
         data = json.load(file)
         master_password = data['master_password']
+    encrypt_file()
+    if master_password == "dGVzdA==":
+        print("\nPlease Change your master password!")
+        change_master_password(data)
+        encrypt_file()
+        quit()
 
-        if master_password == "dGVzdA==":
-            print("\nPlease Change your master password!")
-            change_master_password(data)
+    master_password_input = getpass("Enter master password: ")
+    if encode_sha(master_password_input) == master_password:
+        clear()
+        while True:
+            decrypt_file()
+            with open("data.json", "r") as f:
+                data = json.load(f)
             encrypt_file()
-            quit()
-
-        master_password_input = getpass("Enter master password: ")
-        if encode_sha(master_password_input) == master_password:
-            clear()
-            while True:
-                decrypt_file()
-                with open("data.json", "r") as f:
-                    data = json.load(f)
-                command = input(">> ").split()
-                try:
-                    if command[0] == "getpass":
-                        if len(command) == 2:
-                            copy_password(command[1], data)
-                        else:
-                            print("[-] Invalid Arguments")
-                    elif command[0] == "get":
-                        if len(command) == 2:
-                            show_details(command[1], data)
-                    elif command[0] == "add":
-                        if len(command) == 3:
-                            add_data(command[1], encode_password(command[2]))
-                        else:
-                            print("[-] Invalid Arguments")
-                    elif command[0] == "show" and command[1] == "all":
-                        show_all_entries(data)
-                    elif command[0] == "switch":
-                        curr = getpass("Enter current master password: ")
-                        if encode_sha(curr) == master_password:
-                            change_master_password(data)
-                        else:
-                            print("[-] Wrong master password!")
-                    elif command[0] == "clear" or command[0] == "cls":
-                        clear()                        
-                    
-                    # Exit Command                    
-                    if exit_programme(command):
-                        clear()
-                        encrypt_file()
-                        break
-                except IndexError:
+            command = input(">> ").split()
+            try:
+                if command[0] == "getpass":
+                    if len(command) == 2:
+                        copy_password(command[1], data)
+                    else:
+                        print("[-] Invalid Arguments")
+                elif command[0] == "get":
+                    if len(command) == 2:
+                        show_details(command[1], data)
+                elif command[0] == "add":
+                    if len(command) == 3:
+                        add_data(command[1], encode_password(command[2]))
+                    else:
+                        print("[-] Invalid Arguments")
+                elif command[0] == "show" and command[1] == "all":
+                    show_all_entries(data)
+                elif command[0] == "switch":
+                    curr = getpass("Enter current master password: ")
+                    if encode_sha(curr) == master_password:
+                        change_master_password(data)
+                    else:
+                        print("[-] Wrong master password!")
+                elif command[0] == "clear" or command[0] == "cls":
+                    clear()                        
+                
+                # Exit Command                    
+                if exit_programme(command):
                     clear()
+                    encrypt_file()
+                    break
+            except IndexError:
+                clear()
 
-        else:
-            clear()
-            print("[-] Wrong Password, Try again.")
-            encrypt_file()
+    else:
+        clear()
+        print("[-] Wrong Password, Try again.")
+        encrypt_file()
 except FileNotFoundError:
     with open("data.json", "w") as f:
         f.write("""
