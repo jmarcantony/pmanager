@@ -183,7 +183,6 @@ try:
     else:
         clear()
         print("[-] Wrong Password, Try again.")
-        encrypt_file()
 except FileNotFoundError:
     with open("data.json", "w") as f:
         f.write("""
