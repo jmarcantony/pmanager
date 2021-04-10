@@ -63,9 +63,11 @@ def change_master_password(data):
     
     if new_pass == retype:
         data["master_password"] = encode_sha(new_pass)
+        decrypt_file()
         with open("data.json", "w") as f:
             json.dump(data, f, indent=4)
             print("[+] Master Password has been updated succcesfully!")
+        encrypt_file()
     else:
         print("\n[-] Password do not match!")
         change_master_password(data)
@@ -106,6 +108,7 @@ def copy_password(get, data):
 
 
 def add_data(email_to_add, email_password):
+    decrypt_file()
     with open("data.json") as base_file:
         data = json.load(base_file)
         with open("data.json", "w") as file:
@@ -123,10 +126,10 @@ def add_data(email_to_add, email_password):
                     json.dump(new_data, file, indent=4)
                     clear()
                     print("[+] Updated Entry to Database, restart app to get data.")
-
+    encrypt_file()
 try:
     decrypt_file()
-    with open("data.json") as file:
+    with open("data.json", "r") as file:
         # Read Master Password
         data = json.load(file)
         master_password = data['master_password']
@@ -134,7 +137,6 @@ try:
     if master_password == "dGVzdA==":
         print("\nPlease Change your master password!")
         change_master_password(data)
-        encrypt_file()
         quit()
 
     master_password_input = getpass("Enter master password: ")
@@ -189,7 +191,7 @@ except FileNotFoundError:
 {
     "master_password": "dGVzdA==",
     "entries": {
-        "test@gmaill.com": "dGVzdA=="
+        "test@gmail.com": "dGVzdA=="
     }
 }
             """)
@@ -202,4 +204,3 @@ except KeyboardInterrupt:
     print("Goodbye...")
     time.sleep(0.5)
     clear()
-    encrypt_file()
