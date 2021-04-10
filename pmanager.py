@@ -176,7 +176,6 @@ try:
                 # Exit Command                    
                 if exit_programme(command):
                     clear()
-                    encrypt_file()
                     break
             except IndexError:
                 clear()
