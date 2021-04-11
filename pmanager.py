@@ -72,6 +72,22 @@ def change_master_password(data):
         print("\n[-] Password do not match!")
         change_master_password(data)
 
+def remove(email):
+    decrypt_file()
+    with open("data.json") as base_file:
+        data = json.load(base_file)
+        with open("data.json", "w") as file:
+            if email in data["entries"]:
+                new_data = data
+                del new_data["entries"][email]
+                json.dump(new_data, file, indent=4)
+                clear()
+                print("[+] Removed entry from database")
+            else:
+                clear()
+                print("[-] Email not found in database")
+    encrypt_file()
+
 def exit_programme(args):
     quit_args = ['quit', "goodbye", 'bye']
     return args[0] in quit_args
@@ -162,6 +178,11 @@ try:
                         add_data(command[1], encode_password(command[2]))
                     else:
                         print("[-] Invalid Arguments")
+                elif command[0] == "remove":
+                    if len(command) == 2:
+                        remove(command[1])
+                    else:
+                        print("[-] Invalid Arguments")
                 elif command[0] == "show" and command[1] == "all":
                     show_all_entries(data)
                 elif command[0] == "switch":
@@ -189,7 +210,7 @@ except FileNotFoundError:
 {
     "master_password": "dGVzdA==",
     "entries": {
-        "test@email.com": "dGVzdA=="
+        "test@gmail.com": "dGVzdA=="
     }
 }
             """)

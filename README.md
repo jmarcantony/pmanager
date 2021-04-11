@@ -23,6 +23,12 @@ Password Manager with python
 ###  Usage:
     add [email] [password] (Replace placeholders in squarebackets with actual email and password)
 
+## remove:
+###  Description:
+    Removes an email from json file
+###  Usage:
+    remove [email] (Replace placeholders in squarebackets with email to remove)
+
 ## get:
 ###  Description:
     Shows Email and Password for a given Email and copies password to clipboard.
