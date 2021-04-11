@@ -53,6 +53,12 @@ Password Manager with python
 ###  Usage:
     switch
 
+## help:
+###  Description:
+    Shows Documementation
+###  Usage:
+    help
+
 ## clear:
 ###  Description:
     Clears the scren.
