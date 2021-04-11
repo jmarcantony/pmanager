@@ -189,7 +189,7 @@ except FileNotFoundError:
 {
     "master_password": "dGVzdA==",
     "entries": {
-        "test@gmail.com": "dGVzdA=="
+        "test@email.com": "dGVzdA=="
     }
 }
             """)
