@@ -69,7 +69,7 @@ def change_master_password(data):
             print("[+] Master Password has been updated succcesfully!")
         encrypt_file()
     else:
-        print("\n[-] Password do not match!")
+        print("\n[-] Password does not match!")
         change_master_password(data)
 
 def remove(email):
