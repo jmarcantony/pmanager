@@ -76,16 +76,16 @@ def remove(email):
     decrypt_file()
     with open("data.json") as base_file:
         data = json.load(base_file)
-        with open("data.json", "w") as file:
-            if email in data["entries"]:
-                new_data = data
-                del new_data["entries"][email]
+        if email in data["entries"]:
+            new_data = data
+            del new_data["entries"][email]
+            with open("data.json", "w") as file:
                 json.dump(new_data, file, indent=4)
-                clear()
-                print("[+] Removed entry from database")
-            else:
-                clear()
-                print("[-] Email not found in database")
+            clear()
+            print("[+] Removed entry from database")
+        else:
+            clear()
+            print("[-] Email not found in database")
     encrypt_file()
 
 def exit_programme(args):
