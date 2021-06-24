@@ -43,13 +43,19 @@ def help():
   Description:
     Adds a new email and a password to json file
   Usage:
-    add [email] [password] (Replace placeholders in squarebackets with actual email and password)
+    add [website] [email] [password] (Replace placeholders in squarebackets with actual email and password)
 
  remove:
   Description:
     Removes an email from json file
   Usage:
     remove [email] (Replace placeholders in squarebackets with email to remove)
+
+ remove website:
+  Description:
+    Removes all emails by given website name
+  Usage:
+    remove website [website] (Replace placeholders in squarebackets with website to remove)
 
  get:
   Description:
@@ -59,9 +65,15 @@ def help():
 
  getpass:
   Description:
-    Copies password of a givem email to clipboard without showing it.
+    Copies password of a given email to clipboard without showing it.
   Usage:
     getpass [email] (Replace placeholders in squarebackets with actual email) 
+
+ fetch website:
+  Description:
+    Gets all emails by given website name (Replace placeholders in squarebackets with website to fetch)
+  Usage:
+    fetch website [website]
 
  show all:
   Description:
@@ -130,7 +142,7 @@ def change_master_password(data):
         print("\n[-] Password does not match!")
         change_master_password(data)
 
-def remove(email):
+def remove(email, by_website=False):
     decrypt_file()
     with open("data.json") as base_file:
         data = json.load(base_file)
@@ -139,11 +151,11 @@ def remove(email):
             del new_data["entries"][email]
             with open("data.json", "w") as file:
                 json.dump(new_data, file, indent=4)
-            clear()
-            print("[+] Removed entry from database")
+            if not by_website:
+                print("[+] Removed entry from database")
         else:
-            clear()
-            print("[-] Email not found in database")
+            if not by_website:
+                print("[-] Email not found in database")
     encrypt_file()
 
 def exit_programme(args):
@@ -161,46 +173,64 @@ def decode_password(password):
     return base64_decode_bytes.decode('ascii')
 
 def show_all_entries(data):
-    entries = [[key, decode_password(value)] for (key, value) in data['entries'].items()]
-    print(f"\n{tabulate(entries, headers=['Email', 'Password'], tablefmt='orgtbl')}\n")
+    entries = [[value["website"], key, decode_password(value["password"])] for (key, value) in data['entries'].items()]
+    print(f"\n{tabulate(entries, headers=['Website', 'Email', 'Password'], tablefmt='orgtbl')}\n")
 
 def show_details(get, data):
     email_to_get = get
     try:
-        print(f"[+] Email: {email_to_get}\n[+] Password: {decode_password(data['entries'][email_to_get])}")
-        pyperclip.copy(decode_password(data['entries'][email_to_get]))
+        print(f"[+] Website: {data['entries'][email_to_get]['website']}\n[+] Email: {email_to_get}\n[+] Password: {decode_password(data['entries'][email_to_get]['password'])}")
+        pyperclip.copy(decode_password(data['entries'][email_to_get]["password"]))
     except KeyError:
         print(f"[-] No Data found on {email_to_get}")
 
 def copy_password(get, data):
     email_to_get = get
     try:
-        pyperclip.copy(decode_password(data['entries'][email_to_get]))
-        clear()
+        pyperclip.copy(decode_password(data['entries'][email_to_get]["password"]))
         print(f"[+] Password Copied to Clipboard")
     except KeyError:
         print(f"[-] No Data found on {email_to_get}")  
 
-def add_data(email_to_add, email_password):
+def add_data(website, email_to_add, email_password):
     decrypt_file()
     with open("data.json") as base_file:
         data = json.load(base_file)
         with open("data.json", "w") as file:
             if email_to_add not in data['entries']:
                 new_data = data
-                new_data['entries'][email_to_add] = email_password
+                new_data['entries'][email_to_add] = {}
+                new_data['entries'][email_to_add]["password"] = email_password
+                new_data['entries'][email_to_add]["website"] = website
                 json.dump(new_data, file, indent=4)
-                clear()
                 print("[+] Added Entry to Database")
             else:
                 update = input(f"{email_to_add} is already in the databse, do you want to update it? (y / n): ").lower()
                 if update == "y":
                     new_data = data
-                    new_data['entries'][email_to_add] = email_password
+                    new_data['entries'][email_to_add]["password"] = encode_password(email_password)
+                    new_data['entries'][email_to_add]["website"] = website
                     json.dump(new_data, file, indent=4)
-                    clear()
-                    print("[+] Updated Entry to Database, restart app to get data.")
+                    print("[+] Updated Entry to Database")
     encrypt_file()
+
+def get_website(website, data):
+    found = []
+    for (email, pairs) in data["entries"].items():
+        if pairs["website"] == website:
+            found.append([pairs["website"], email, decode_password(pairs["password"])])
+    print(f"\n{tabulate(found, headers=['Website', 'Email', 'Password'], tablefmt='orgtbl')}\n")
+
+def remove_website(website, data):
+    removed = 0
+    for (email, pairs) in data["entries"].items():
+        if pairs["website"] == website:
+            remove(email, by_website=True)
+            removed += 1
+    if removed > 0:
+        print(f"[+] Removed {removed} entries from database")
+    else:
+        print(f"[-] No entries found with website '{website}'")
 
 def main():
     try:
@@ -229,20 +259,30 @@ def main():
                         if len(command) == 2:
                             copy_password(command[1], data)
                         else:
-                            print("[-] Invalid Arguments")
+                            print("[-] Invalid Arguments, try 'help' for help")
+                    elif command[0] == "fetch" and command[1] == "website":
+                        if len(command) == 3:
+                            get_website(command[2], data)
+                        else:
+                            print("[-] Invalid Arguments, try 'help' for help")
                     elif command[0] == "get":
                         if len(command) == 2:
-                            show_details(command[1], data)
-                    elif command[0] == "add":
-                        if len(command) == 3:
-                            add_data(command[1], encode_password(command[2]))
+                            get_website(command[2].lower(), data)
                         else:
-                            print("[-] Invalid Arguments")
+                            print("[-] Invalid Arguments, try 'help' for help")
+                    elif command[0] == "add":
+                        if len(command) == 4:
+                            add_data(command[1], command[2], encode_password(command[3]))
+                        else:
+                            print("[-] Invalid Arguments, type 'help' for help")
                     elif command[0] == "remove":
-                        if len(command) == 2:
+                        if len(command) == 3:
+                            if command[1] == "website":
+                                remove_website(command[2], data)
+                        elif len(command) == 2:
                             remove(command[1])
                         else:
-                            print("[-] Invalid Arguments")
+                            print("[-] Invalid Arguments, type 'help' for help")
                     elif command[0] == "show" and command[1] == "all":
                         show_all_entries(data)
                     elif command[0] == "switch":
@@ -264,7 +304,6 @@ def main():
                     clear()
 
         else:
-            clear()
             print("[-] Wrong Password, Try again.")
 
     except FileNotFoundError:
@@ -273,11 +312,13 @@ def main():
 {
     "master_password": "dGVzdA==",
     "entries": {
-        "test@gmail.com": "dGVzdA=="
+        "test@gmail.com": {
+                "website": "google",
+                "password": "dGVzdA=="
+            }
     }
 }
             """)
-        clear()
         print("[+] Data File has been created. Run the programme again to use it.")
         encrypt_file()
 
@@ -285,7 +326,4 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        clear()
-        print("Goodbye...")
-        time.sleep(0.5)
         clear()

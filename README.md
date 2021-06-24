@@ -29,6 +29,12 @@ Password Manager with python
 ###  Usage:
     remove [email] (Replace placeholders in squarebackets with email to remove)
 
+## remove website:
+###  Description:
+    Removes all emails by given website name
+###  Usage:
+    remove website [website] (Replace placeholders in squarebackets with website to remove)
+
 ## get:
 ###  Description:
     Shows Email and Password for a given Email and copies password to clipboard.
@@ -40,6 +46,12 @@ Password Manager with python
     Copies password of a givem email to clipboard without showing it.
 ###  Usage:
     getpass [email] (Replace placeholders in squarebackets with actual email) 
+
+## fetch website:
+###  Description:
+    Gets all emails by given website name (Replace placeholders in squarebackets with website to fetch)
+###  Usage:
+    fetch website [website]
 
 ## show all:
 ###  Description:
