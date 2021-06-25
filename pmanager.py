@@ -43,13 +43,13 @@ def help():
   Description:
     Adds a new email and a password to json file
   Usage:
-    add [website] [email] [password] (Replace placeholders in squarebackets with actual email and password)
+    add [website] [email] [password] (Replace placeholders in squarebackets with website, actual email and password)
 
  remove:
   Description:
     Removes an email from json file
   Usage:
-    remove [email] (Replace placeholders in squarebackets with email to remove)
+    remove [website] [email] (Replace placeholders in squarebackets with website and email to remove)
 
  remove website:
   Description:
@@ -61,13 +61,13 @@ def help():
   Description:
     Shows Email and Password for a given Email and copies password to clipboard.
   Usage:
-    get [email] (Replace placeholders in squarebackets with actual email)
+    get [website] [email] (Replace placeholders in squarebackets with website and actual email)
 
  getpass:
   Description:
     Copies password of a given email to clipboard without showing it.
   Usage:
-    getpass [email] (Replace placeholders in squarebackets with actual email) 
+    getpass [website] [email] (Replace placeholders in squarebackets with actual email) 
 
  fetch website:
   Description:
@@ -142,20 +142,18 @@ def change_master_password(data):
         print("\n[-] Password does not match!")
         change_master_password(data)
 
-def remove(email, by_website=False):
+def remove(website, email):
     decrypt_file()
     with open("data.json") as base_file:
         data = json.load(base_file)
-        if email in data["entries"]:
+        if email in data["entries"][website]:
             new_data = data
-            del new_data["entries"][email]
+            del new_data["entries"][website][email]
             with open("data.json", "w") as file:
                 json.dump(new_data, file, indent=4)
-            if not by_website:
-                print("[+] Removed entry from database")
+            print("[+] Removed entry from database")
         else:
-            if not by_website:
-                print("[-] Email not found in database")
+            print("[-] Email not found in database")
     encrypt_file()
 
 def exit_programme(args):
@@ -173,21 +171,25 @@ def decode_password(password):
     return base64_decode_bytes.decode('ascii')
 
 def show_all_entries(data):
-    entries = [[value["website"], key, decode_password(value["password"])] for (key, value) in data['entries'].items()]
+    entries = []
+    for website in data["entries"]:
+        for (key, value) in data["entries"][website].items():
+            entries.append([website, key, decode_password(value)])
+    # entries = [[value["website"], key, decode_password(value["password"])] for (key, value) in data['entries']]
     print(f"\n{tabulate(entries, headers=['Website', 'Email', 'Password'], tablefmt='orgtbl')}\n")
 
-def show_details(get, data):
+def show_details(website, get, data):
     email_to_get = get
     try:
-        print(f"[+] Website: {data['entries'][email_to_get]['website']}\n[+] Email: {email_to_get}\n[+] Password: {decode_password(data['entries'][email_to_get]['password'])}")
-        pyperclip.copy(decode_password(data['entries'][email_to_get]["password"]))
+        print(f"[+] Website: {website}\n[+] Email: {email_to_get}\n[+] Password: {decode_password(data['entries'][website][email_to_get])}")
+        pyperclip.copy(decode_password(data['entries'][website][email_to_get]))
     except KeyError:
         print(f"[-] No Data found on {email_to_get}")
 
-def copy_password(get, data):
+def copy_password(website, get, data):
     email_to_get = get
     try:
-        pyperclip.copy(decode_password(data['entries'][email_to_get]["password"]))
+        pyperclip.copy(decode_password(data['entries'][website][email_to_get]))
         print(f"[+] Password Copied to Clipboard")
     except KeyError:
         print(f"[-] No Data found on {email_to_get}")  
@@ -197,40 +199,39 @@ def add_data(website, email_to_add, email_password):
     with open("data.json") as base_file:
         data = json.load(base_file)
         with open("data.json", "w") as file:
-            if email_to_add not in data['entries']:
+            if website not in data["entries"]:
+                data["entries"][website] = {}
+            if email_to_add not in data['entries'][website]:
                 new_data = data
-                new_data['entries'][email_to_add] = {}
-                new_data['entries'][email_to_add]["password"] = email_password
-                new_data['entries'][email_to_add]["website"] = website
+                new_data['entries'][website][email_to_add] = email_password
                 json.dump(new_data, file, indent=4)
                 print("[+] Added Entry to Database")
             else:
                 update = input(f"{email_to_add} is already in the databse, do you want to update it? (y / n): ").lower()
                 if update == "y":
                     new_data = data
-                    new_data['entries'][email_to_add]["password"] = encode_password(email_password)
-                    new_data['entries'][email_to_add]["website"] = website
+                    new_data['entries'][website][email_to_add] = email_password
                     json.dump(new_data, file, indent=4)
                     print("[+] Updated Entry to Database")
     encrypt_file()
 
 def get_website(website, data):
-    found = []
-    for (email, pairs) in data["entries"].items():
-        if pairs["website"] == website:
-            found.append([pairs["website"], email, decode_password(pairs["password"])])
-    print(f"\n{tabulate(found, headers=['Website', 'Email', 'Password'], tablefmt='orgtbl')}\n")
+    if website in data["entries"]:    
+        found = []
+        for (key, value) in data["entries"][website].items():
+            found.append([website, key, decode_password(value)])
+        print(f"\n{tabulate(found, headers=['Website', 'Email', 'Password'], tablefmt='orgtbl')}\n")
+    else:
+        print(f"[-] No Entries Exist on '{website}'")
 
 def remove_website(website, data):
-    removed = 0
-    for (email, pairs) in data["entries"].items():
-        if pairs["website"] == website:
-            remove(email, by_website=True)
-            removed += 1
-    if removed > 0:
-        print(f"[+] Removed {removed} entries from database")
+    if website in data["entries"]:
+        del data["entries"][website]
+        with open("data.json", "w") as file:
+            json.dump(data, file, indent=4)
+        print("[+] Deleted all entries")
     else:
-        print(f"[-] No entries found with website '{website}'")
+        print(f"[-] No Entries Found on '{website}'")
 
 def main():
     try:
@@ -256,8 +257,8 @@ def main():
                 command = input(">> ").split()
                 try:
                     if command[0] == "getpass":
-                        if len(command) == 2:
-                            copy_password(command[1], data)
+                        if len(command) == 3:
+                            copy_password(command[1], command[2], data)
                         else:
                             print("[-] Invalid Arguments, try 'help' for help")
                     elif command[0] == "fetch" and command[1] == "website":
@@ -266,8 +267,8 @@ def main():
                         else:
                             print("[-] Invalid Arguments, try 'help' for help")
                     elif command[0] == "get":
-                        if len(command) == 2:
-                            get_website(command[2].lower(), data)
+                        if len(command) == 3:
+                            show_details(command[1], command[2].lower(), data)
                         else:
                             print("[-] Invalid Arguments, try 'help' for help")
                     elif command[0] == "add":
@@ -276,11 +277,10 @@ def main():
                         else:
                             print("[-] Invalid Arguments, type 'help' for help")
                     elif command[0] == "remove":
-                        if len(command) == 3:
-                            if command[1] == "website":
-                                remove_website(command[2], data)
-                        elif len(command) == 2:
-                            remove(command[1])
+                        if len(command) == 3 and command[1] == "website":
+                            remove_website(command[2], data)
+                        elif len(command) == 3:
+                            remove(command[1], command[2])
                         else:
                             print("[-] Invalid Arguments, type 'help' for help")
                     elif command[0] == "show" and command[1] == "all":
@@ -312,10 +312,9 @@ def main():
 {
     "master_password": "dGVzdA==",
     "entries": {
-        "test@gmail.com": {
-                "website": "google",
-                "password": "dGVzdA=="
-            }
+        "email": {
+            "test@email.com": "dGVzdA=="
+        }
     }
 }
             """)

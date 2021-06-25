@@ -21,13 +21,13 @@ Password Manager with python
 ###  Description:
     Adds a new email and a password to json file
 ###  Usage:
-    add [email] [password] (Replace placeholders in squarebackets with actual email and password)
+    add [website] [email] [password] (Replace placeholders in squarebackets with actual website, email and password)
 
 ## remove:
 ###  Description:
     Removes an email from json file
 ###  Usage:
-    remove [email] (Replace placeholders in squarebackets with email to remove)
+    remove [website] [email] (Replace placeholders in squarebackets with website and email to remove)
 
 ## remove website:
 ###  Description:
@@ -39,13 +39,13 @@ Password Manager with python
 ###  Description:
     Shows Email and Password for a given Email and copies password to clipboard.
 ###  Usage:
-    get [email] (Replace placeholders in squarebackets with actual email)
+    get [website] [email] (Replace placeholders in squarebackets with website and actual email)
 
 ## getpass:
 ###  Description:
     Copies password of a givem email to clipboard without showing it.
 ###  Usage:
-    getpass [email] (Replace placeholders in squarebackets with actual email) 
+    getpass [website] [email] (Replace placeholders in squarebackets with website and actual email) 
 
 ## fetch website:
 ###  Description:
