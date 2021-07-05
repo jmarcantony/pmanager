@@ -4,13 +4,13 @@ Password Manager with python
 ## Written in python 3.9.4 
 
 # Installation on Windows:
-* `git clone https://github.com/ninjahacker123/Pmanager.git`
+* `git clone https://github.com/jmarcantony/Pmanager.git`
 * `cd Pmanager`
 * `pip install -r requirements.txt`
 * `python pmanager.py`
 
 # Installation on Linux and Unix like OS:
-* `git clone https://github.com/ninjahacker123/Pmanager.git`
+* `git clone https://github.com/jmarcantony/Pmanager.git`
 * `cd Pmanager`
 * `pip3 install -r requirements.txt`
 * `python3 pmanager.py`
