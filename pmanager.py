@@ -175,7 +175,6 @@ def show_all_entries(data):
     for website in data["entries"]:
         for (key, value) in data["entries"][website].items():
             entries.append([website, key, decode_password(value)])
-    # entries = [[value["website"], key, decode_password(value["password"])] for (key, value) in data['entries']]
     print(f"\n{tabulate(entries, headers=['Website', 'Email', 'Password'], tablefmt='orgtbl')}\n")
 
 def show_details(website, get, data):
