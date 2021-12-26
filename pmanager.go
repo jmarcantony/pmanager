@@ -1,15 +1,21 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
-	"github.com/jmarcantony/pmanager/cmd"
+	"github.com/jmarcantony/pmanager/pkg"
 )
 
 func main() {
-	pass, err := cmd.Getpass()
-	if err != nil {
-		log.Fatal(err)
+	jsonPath := pkg.GetJsonPath()
+	created := pkg.CreateJson(jsonPath)
+	if created {
+		fmt.Println("Created!")
+		return
 	}
-	_ = pass
+	pass := pkg.GetPass()
+	data := decryptJson(jsonPath, pass)
+	for k, v := range data {
+		fmt.Printf("%s: %s\n", k, v)
+	}
 }

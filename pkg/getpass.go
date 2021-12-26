@@ -1,4 +1,4 @@
-package cmd
+package pkg
 
 import (
 	"fmt"
@@ -7,9 +7,10 @@ import (
 	"golang.org/x/term"
 )
 
-func Getpass() (string, error) {
+func GetPass() string {
 	fmt.Print("🔒 Enter master password: ")
 	password, err := term.ReadPassword(int(syscall.Stdin))
+	CheckErr(err)
 	fmt.Println()
-	return string(password), err
+	return string(password)
 }
