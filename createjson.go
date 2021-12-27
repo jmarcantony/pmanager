@@ -1,4 +1,4 @@
-package pkg
+package main
 
 import (
 	"io/ioutil"
@@ -10,7 +10,9 @@ func CreateJson(path string) bool {
 	if _, err := os.Stat(path); err != nil {
 		initData := []byte(`
 {
-    "test@email.com": "dGVzdA=="
+	"email": {
+    	"test@email.com": "dGVzdA=="
+	}
 }	
 		`)
 		err := ioutil.WriteFile(path, initData, 0600)
