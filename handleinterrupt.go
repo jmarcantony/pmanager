@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,7 +12,6 @@ func HandleInterrupt() {
 	go func() {
 		<-c
 		Clear()
-		fmt.Println("Interrupted...")
 		os.Exit(0)
 	}()
 }

@@ -9,6 +9,8 @@ import (
 
 type Data map[string]map[string]string
 
+const argerr = "[-] Invalid arguments, try 'help' for help"
+
 func main() {
 	HandleInterrupt()
 	jsonPath := GetJsonPath()
@@ -32,7 +34,17 @@ func main() {
 			if len(cmd) == 3 {
 				CopyPass(cmd[1], cmd[2], data)
 			} else {
-				fmt.Println("[-] Invalid arguments, try 'help' for help")
+				fmt.Println(argerr)
+			}
+		case "show":
+			if cmd[1] == "all" {
+				if len(cmd) == 2 {
+					// TODO: Show all data in tabulated form
+				} else if len(cmd) == 3 {
+					ShowWebsite(cmd[2], data)
+				} else {
+					fmt.Println(argerr)
+				}
 			}
 		default:
 			Clear()
