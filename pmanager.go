@@ -45,6 +45,8 @@ func main() {
 				} else {
 					fmt.Println(argerr)
 				}
+			} else if len(cmd) == 3 {
+				ShowAddr(cmd[1], cmd[2], data)
 			}
 		default:
 			Clear()
