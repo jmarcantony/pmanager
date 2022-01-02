@@ -19,11 +19,8 @@ func main() {
 		fmt.Println("Created!")
 		return
 	}
-	pass := GetPass()
+	pass := GetPass(false)
 	data := decryptJson(jsonPath, pass)
-	for k, v := range data {
-		fmt.Printf("%s: %s\n", k, v)
-	}
 	s := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print(">> ")

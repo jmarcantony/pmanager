@@ -16,8 +16,10 @@ func CreateJson(path string) bool {
 }	
 		`)
 		err := ioutil.WriteFile(path, initData, 0600)
-		CheckErr(err)
+		CheckErr(err, false)
 		created = true
+		pass := GetPass(true)
+		encryptJson(path, pass)
 	}
 	return created
 }
