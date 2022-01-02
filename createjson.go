@@ -5,8 +5,7 @@ import (
 	"os"
 )
 
-func CreateJson(path string) bool {
-	var created bool
+func CreateJson(path string) (created bool) {
 	if _, err := os.Stat(path); err != nil {
 		initData := []byte(`
 {
@@ -21,5 +20,5 @@ func CreateJson(path string) bool {
 		pass := GetPass(true)
 		encryptJson(path, pass)
 	}
-	return created
+	return
 }
