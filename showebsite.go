@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"text/tabwriter"
+
+	"github.com/jedib0t/go-pretty/v6/table"
 )
 
 func ShowWebsite(website string, d Data) {
@@ -12,10 +13,13 @@ func ShowWebsite(website string, d Data) {
 		fmt.Printf("[-] No entries exist on %s\n", website)
 		return
 	}
-	w := tabwriter.NewWriter(os.Stdout, 1, 1, 5, ' ', 0)
-	fmt.Fprintln(w, "Website\tEmail\tPassword")
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"Websit", "Email", "Password"})
+	var rows []table.Row
 	for addr, pass := range entries {
-		fmt.Fprintf(w, "%s\t%s\t%s\n", website, addr, pass)
+		rows = append(rows, table.Row{website, addr, pass})
 	}
-	w.Flush()
+	t.AppendRows(rows)
+	t.Render()
 }
