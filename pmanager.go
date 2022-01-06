@@ -53,8 +53,6 @@ func main() {
 			} else {
 				fmt.Println(argerr)
 			}
-		default:
-			Clear()
 		}
 	}
 }
