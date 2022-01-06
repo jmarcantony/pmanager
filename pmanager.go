@@ -22,6 +22,7 @@ func main() {
 	pass := GetPass(false)
 	data := decryptJson(jsonPath, pass)
 	s := bufio.NewScanner(os.Stdin)
+	Clear()
 	for {
 		fmt.Print(">> ")
 		s.Scan()
@@ -44,6 +45,13 @@ func main() {
 				}
 			} else if len(cmd) == 3 {
 				ShowAddr(cmd[1], cmd[2], data)
+			}
+		case "add":
+			if len(cmd) == 4 {
+				data = Add(data, cmd[1], cmd[2], cmd[3])
+				WriteChanges(data, jsonPath, pass)
+			} else {
+				fmt.Println(argerr)
 			}
 		default:
 			Clear()
