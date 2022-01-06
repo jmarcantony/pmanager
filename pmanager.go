@@ -36,7 +36,7 @@ func main() {
 		case "show":
 			if cmd[1] == "all" {
 				if len(cmd) == 2 {
-					// TODO: Show all data in tabulated form
+					ShowAll(data)
 				} else if len(cmd) == 3 {
 					ShowWebsite(cmd[2], data)
 				} else {
