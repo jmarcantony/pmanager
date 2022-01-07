@@ -1,84 +1,74 @@
 # Pmanager
-Password Manager with python
+Password Manager in go
 
-## Written in python 3.9.4 
+## Written in go 1.17.5
 
-# Installation on Windows:
-* `git clone https://github.com/jmarcantony/Pmanager.git`
-* `cd Pmanager`
-* `pip install -r requirements.txt`
-* `python pmanager.py`
-
-# Installation on Linux and Unix like OS:
-* `git clone https://github.com/jmarcantony/Pmanager.git`
-* `cd Pmanager`
-* `pip3 install -r requirements.txt`
-* `python3 pmanager.py`
-
+# Installation:
+    go get github.com/jmarcantony/pmanager
 
 # Docs:
 ## add:
-###  Description:
+### Description:
     Adds a new email and a password to json file
-###  Usage:
-    add [website] [email] [password] (Replace placeholders in squarebackets with actual website, email and password)
+### Usage:
+    add [website] [email] [password]
 
 ## remove:
-###  Description:
+### Description:
     Removes an email from json file
-###  Usage:
-    remove [website] [email] (Replace placeholders in squarebackets with website and email to remove)
+### Usage:
+    remove [website] [email]
 
 ## remove website:
-###  Description:
+### Description:
     Removes all emails by given website name
-###  Usage:
-    remove website [website] (Replace placeholders in squarebackets with website to remove)
+### Usage:
+    remove website [website]
 
-## get:
-###  Description:
+## show [website] [email]:
+### Description:
     Shows Email and Password for a given Email and copies password to clipboard.
-###  Usage:
-    get [website] [email] (Replace placeholders in squarebackets with website and actual email)
+### Usage:
+    get [website] [email]
 
 ## getpass:
-###  Description:
-    Copies password of a givem email to clipboard without showing it.
-###  Usage:
-    getpass [website] [email] (Replace placeholders in squarebackets with website and actual email) 
+### Description:
+    Copies password of a given email to clipboard without showing it.
+### Usage:
+    getpass [website] [email]
 
-## fetch website:
-###  Description:
-    Gets all emails by given website name (Replace placeholders in squarebackets with website to fetch)
-###  Usage:
-    fetch website [website]
+## show all [website]:
+### Description:
+    Gets all emails by given website name
+### Usage:
+    show all [website]
 
 ## show all:
-###  Description:
+### Description:
     Shows all stored data in tabulated form.
-###  Usage:
+### Usage:
     show all
 
 ## switch:
-###  Description:
+### Description:
     Changes master password
-###  Usage:
+### Usage:
     switch
 
 ## help:
-###  Description:
+### Description:
     Shows Documementation
-###  Usage:
+### Usage:
     help
 
-## clear:
-###  Description:
+## clear, cls:
+### Description:
     Clears the scren.
-###  Usage:
+### Usage:
     clear 
- 
+
 ## quit:
-###  Description:
+### Description:
     Quits the proramme, Ctrl + c also works.
-###  Usage:
+### Usage:
     quit
