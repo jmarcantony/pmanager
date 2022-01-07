@@ -23,8 +23,13 @@ func main() {
 	data := decryptJson(jsonPath, pass)
 	s := bufio.NewScanner(os.Stdin)
 	Clear()
+	var skip bool
 	for {
-		fmt.Print(">> ")
+		if !skip {
+			fmt.Print(">> ")
+		} else {
+			skip = false
+		}
 		s.Scan()
 		cmd := strings.Split(s.Text(), " ")
 		switch cmd[0] {
@@ -50,6 +55,20 @@ func main() {
 			if len(cmd) == 4 {
 				data = Add(data, cmd[1], cmd[2], cmd[3])
 				WriteChanges(data, jsonPath, pass)
+				skip = true
+			} else {
+				fmt.Println(argerr)
+			}
+		case "remove":
+			if len(cmd) == 3 {
+				if cmd[1] == "website" {
+					data = RemoveWebsite(data, cmd[2])
+					WriteChanges(data, jsonPath, pass)
+				} else {
+					data = Remove(data, cmd[1], cmd[2])
+					WriteChanges(data, jsonPath, pass)
+				}
+
 			} else {
 				fmt.Println(argerr)
 			}
