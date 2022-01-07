@@ -24,6 +24,7 @@ func main() {
 	s := bufio.NewScanner(os.Stdin)
 	Clear()
 	var skip bool
+mainloop:
 	for {
 		if !skip {
 			fmt.Print(">> ")
@@ -77,8 +78,13 @@ func main() {
 			a := GetPass(true)
 			WriteChanges(data, jsonPath, a)
 			fmt.Println("[+] Changed master password succesfully")
+		case "help":
+			Help()
 		case "cls", "clear":
 			Clear()
+		case "quit":
+			Clear()
+			break mainloop
 		}
 	}
 }

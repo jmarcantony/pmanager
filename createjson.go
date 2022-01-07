@@ -7,7 +7,7 @@ import (
 
 func CreateJson(path string) (created bool) {
 	if _, err := os.Stat(path); err != nil {
-		initData := []byte(`{"email": {"test@email.com": "dGVzdA=="}}`)
+		initData := []byte(`{"email": {"test@email.com": "test"}}`)
 		err := ioutil.WriteFile(path, initData, 0600)
 		CheckErr(err, false)
 		created = true
