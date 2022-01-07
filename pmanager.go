@@ -53,9 +53,11 @@ func main() {
 			}
 		case "add":
 			if len(cmd) == 4 {
-				data = Add(data, cmd[1], cmd[2], cmd[3])
+				data, updated := Add(data, cmd[1], cmd[2], cmd[3])
 				WriteChanges(data, jsonPath, pass)
-				skip = true
+				if updated {
+					skip = true
+				}
 			} else {
 				fmt.Println(argerr)
 			}
@@ -68,7 +70,6 @@ func main() {
 					data = Remove(data, cmd[1], cmd[2])
 					WriteChanges(data, jsonPath, pass)
 				}
-
 			} else {
 				fmt.Println(argerr)
 			}

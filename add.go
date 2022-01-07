@@ -6,7 +6,8 @@ import (
 	"strings"
 )
 
-func Add(d Data, website string, addr string, pass string) Data {
+func Add(d Data, website string, addr string, pass string) (Data, bool) {
+	var updated bool
 	if _, ok := d[website]; !ok {
 		d[website] = map[string]string{}
 	}
@@ -15,11 +16,12 @@ func Add(d Data, website string, addr string, pass string) Data {
 		buf := make([]byte, 1)
 		n, err := os.Stdin.Read(buf)
 		CheckErr(err, false)
+		updated = true
 		if strings.ToLower(string(buf[:n])) != "y" {
-			return d
+			return d, updated
 		}
 		fmt.Println("[+] Updated Entry to Database")
 	}
 	d[website][addr] = pass
-	return d
+	return d, updated
 }
