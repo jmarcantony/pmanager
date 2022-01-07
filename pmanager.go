@@ -73,6 +73,12 @@ func main() {
 			} else {
 				fmt.Println(argerr)
 			}
+		case "switch":
+			a := GetPass(true)
+			WriteChanges(data, jsonPath, a)
+			fmt.Println("[+] Changed master password succesfully")
+		case "cls", "clear":
+			Clear()
 		}
 	}
 }
