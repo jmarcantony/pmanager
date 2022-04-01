@@ -4,7 +4,10 @@ Password Manager in go
 ## Written in go 1.17.5
 
 # Installation:
-    go get github.com/jmarcantony/pmanager
+#### Make sure `$GOPATH/bin` is added to PATH
+    go install github.com/jmarcantony/pmanager@latest
+#### Set `PMANAGER_DATA_PATH` environment variable to path of data file (data file doesnt have to exist yet). eg:
+    export PMANAGER_DATA_PATH="/home/user/data.json"
 
 # Docs:
 ## add:
