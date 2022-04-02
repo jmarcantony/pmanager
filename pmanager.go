@@ -14,12 +14,10 @@ const argerr = "[-] Invalid arguments, try 'help' for help"
 func main() {
 	HandleInterrupt()
 	jsonPath := GetJsonPath()
-	created := CreateJson(jsonPath)
-	if created {
-		fmt.Println("Created!")
-		return
+	created, pass := CreateJson(jsonPath)
+	if !created {
+		pass = GetPass(false)
 	}
-	pass := GetPass(false)
 	data := decryptJson(jsonPath, pass)
 	s := bufio.NewScanner(os.Stdin)
 	Clear()
