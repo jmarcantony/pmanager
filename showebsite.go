@@ -15,7 +15,7 @@ func ShowWebsite(website string, d Data) {
 	}
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
-	t.AppendHeader(table.Row{"Websit", "Email", "Password"})
+	t.AppendHeader(table.Row{"Website", "Email", "Password"})
 	var rows []table.Row
 	for addr, pass := range entries {
 		rows = append(rows, table.Row{website, addr, pass})
