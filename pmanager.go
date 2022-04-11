@@ -38,9 +38,12 @@ mainloop:
 			} else {
 				fmt.Println(argerr)
 			}
-                // TODO: Fix index panic
-                // when only "show" is typed in console, app panics!
 		case "show":
+			if len(cmd) == 1 {
+				fmt.Println(argerr)
+				break
+
+			}
 			if cmd[1] == "all" {
 				if len(cmd) == 2 {
 					ShowAll(data)
