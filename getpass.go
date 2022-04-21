@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"syscall"
@@ -9,22 +10,8 @@ import (
 )
 
 func createPass(pass []byte) string {
-	if len(pass) == 32 {
-		return hex.EncodeToString(pass)
-	}
-	if len(pass) < 32 {
-		b := make([]byte, 32)
-		for i := range b {
-			if i < len(pass) {
-				b[i] = pass[i]
-			} else {
-				b[i] = '0'
-			}
-		}
-		return hex.EncodeToString(b)
-	} else {
-		return hex.EncodeToString(pass[:33])
-	}
+	p := sha256.Sum256(pass)
+	return hex.EncodeToString(p[:])
 }
 
 func GetPass(create bool) string {
